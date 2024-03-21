@@ -1,0 +1,43 @@
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+    - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Starting workflow for releasing build"
+      - uses: actions/checkout@v4
+
+      - name: Create Supabase Secret file
+        id: supabase_secret
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'supabase_secrets.dart'
+          fileDir: './lib/core/secrets/'
+          encodedString: ${{ secrets.SUPABASE_SECRET }}
+
+      - name: Setup Flutter & build APK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.3'
+          channel: 'stable'
+        - run: flutter --version
+        - run: flutter clean
+        - run: flutter pub get
+        - run: flutter build apk
+
+        - name: Upload apk build as an Artifact
+          uses: actions/upload-artifact@v1
+          with:
+            name: staging-release.apk
+            path: build/app/outputs/flutter-apk/app-release.apk
+
+        - name: Create a Release APK
+          uses: ncipollo/release-action@v1
+          with:
+            artifacts: build/app/outputs/flutter-apk/app-release.apk
+            token: ${{ secrets.GITHUB_TOKEN }}
