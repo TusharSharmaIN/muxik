@@ -9,6 +9,7 @@ import 'features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/use_cases/current_user.dart';
+import 'features/auth/domain/use_cases/user_log_out.dart';
 import 'features/auth/domain/use_cases/user_login.dart';
 import 'features/auth/domain/use_cases/user_sign_up.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
@@ -16,6 +17,7 @@ import 'features/song/data/data_sources/song_remote_data_source.dart';
 import 'features/song/data/repositories/song_repository_impl.dart';
 import 'features/song/domain/repositories/song_repository.dart';
 import 'features/song/domain/use_cases/get_all_songs.dart';
+import 'features/song/domain/use_cases/get_user_favorites.dart';
 import 'features/song/domain/use_cases/update_user_favorites.dart';
 import 'features/song/presentation/bloc/song_bloc.dart';
 
