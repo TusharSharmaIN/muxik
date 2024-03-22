@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:muxik/core/extensions/extensions.dart';
-import 'package:muxik/core/utils/show_snackbar.dart';
 
+import '../../../../core/extensions/extensions.dart';
 import '../../../../core/common/widgets/custom_app_bar.dart';
 import '../../../../core/common/widgets/loader.dart';
 import '../../../../core/route/app_router.dart';
 import '../../../../core/theme/theme/app_colors.dart';
+import '../../../../core/utils/show_snackbar.dart';
 import '../../domain/entities/song.dart';
 import '../bloc/song_bloc.dart';
 import '../widgets/song_card_widget.dart';
 
 class SongHomePage extends StatefulWidget {
   final String? userFullName;
+
   const SongHomePage({super.key, this.userFullName});
 
   @override
@@ -25,6 +26,7 @@ class _SongHomePageState extends State<SongHomePage> {
   void initState() {
     super.initState();
     context.read<SongBloc>().add(SongGetAllSongs());
+    context.read<SongBloc>().add(SongGetUserFavorites());
   }
 
   @override
@@ -48,8 +50,33 @@ class _SongHomePageState extends State<SongHomePage> {
               if (state is SongDisplaySuccess) {
                 return Column(
                   children: [
-                    DiscoverMusic(songs: state.songs),
-                    MusicLibrary(songs: state.songs),
+                    DiscoverMusic(songs: state.allSongs),
+
+                    /// for all music
+                    MusicLibrary(
+                      title: "All Musics",
+                      songs: state.allSongs,
+                      onFavorite: () {},
+                    ),
+
+                    ///  For favorite
+                    MusicLibrary(
+                      title: "Your Favorite Picks",
+                      songs: state.favoriteSongs,
+                      isFavorite: true,
+                      onFavorite: () {
+                        print("@@@@ CLIKED ONFAV");
+                        final favoriteSongs =
+                        state.favoriteSongs.map((song) => song.id).toList();
+                        context.read<SongBloc>().add(
+                          SongUpdateUserFavorites(
+                            currentFavorite: favoriteSongs,
+                            newToFavorite: state.allSongs[7].id,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 10),
                   ],
                 );
               }
@@ -139,9 +166,16 @@ class _DiscoverMusicState extends State<DiscoverMusic> {
 }
 
 class MusicLibrary extends StatelessWidget {
+  final String title;
+  final bool isFavorite;
+  final Function onFavorite;
+
   const MusicLibrary({
     super.key,
     required this.songs,
+    required this.title,
+    this.isFavorite = false,
+    required this.onFavorite,
   });
 
   final List<Song> songs;
@@ -160,7 +194,7 @@ class MusicLibrary extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: Text(
-              "Music Library",
+              title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: AppColors.gradient2,
                   ),
@@ -175,6 +209,8 @@ class MusicLibrary extends StatelessWidget {
               itemBuilder: (context, index) {
                 return SongCardWidget(
                   song: songs[index],
+                  isFavorite: isFavorite,
+                  onFavorite: onFavorite,
                 );
               },
             ),

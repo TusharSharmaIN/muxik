@@ -37,20 +37,25 @@ class AppRouter {
         path: AppRoutes.songHome,
         builder: (context, state) {
           final name = state.extra as String;
-          return SongHomePage(userFullName: name,);
+          return SongHomePage(
+            userFullName: name,
+          );
         },
       ),
       GoRoute(
         path: AppRoutes.songDetails,
         builder: (context, state) {
-          final SongModel song = state.extra as SongModel;
-          return SongDetailsPage(song: song);
+          final Map<String, dynamic> data = state.extra as Map<String, dynamic>;
+          return SongDetailsPage(
+            song: data['songs'],
+            isFavorite: data['isFavorite'] ?? false,
+            onFavorite: data['onFavorite'] ?? () {},
+          );
         },
       ),
       GoRoute(
         path: AppRoutes.songSearch,
         builder: (context, state) {
-          //  todo: check what to prefer model or entity
           final List<SongModel> songs = state.extra as List<SongModel>;
           return SongSearchPage(songs: songs);
         },

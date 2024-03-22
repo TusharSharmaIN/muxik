@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:muxik/features/auth/domain/use_cases/user_log_out.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/common/cubit/app_user_cubit.dart';
@@ -17,6 +16,7 @@ import 'features/song/data/data_sources/song_remote_data_source.dart';
 import 'features/song/data/repositories/song_repository_impl.dart';
 import 'features/song/domain/repositories/song_repository.dart';
 import 'features/song/domain/use_cases/get_all_songs.dart';
+import 'features/song/domain/use_cases/update_user_favorites.dart';
 import 'features/song/presentation/bloc/song_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -105,10 +105,20 @@ void _initSong() {
     ..registerFactory(
       () => GetAllSongs(serviceLocator()),
     )
+    //  domain -> use case -> get user favorites
+    ..registerFactory(
+      () => GetUserFavorites(serviceLocator()),
+    )
+    //  domain -> use case -> update user favorites
+    ..registerFactory(
+      () => UpdateUserFavorites(serviceLocator()),
+    )
     //  presentation -> bloc -> blog bloc
     ..registerLazySingleton(
       () => SongBloc(
         getAllSongs: serviceLocator(),
+        getUserFavorites: serviceLocator(),
+        upDateUserFavorite: serviceLocator(),
       ),
     );
 }

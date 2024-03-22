@@ -34,7 +34,6 @@ class SongModel extends Song {
   ];
 
   Map<String, dynamic> toJson() {
-    //  todo: can be added language an singer field here
     return <String, dynamic>{
       'id': id,
       'title': title,
@@ -45,7 +44,6 @@ class SongModel extends Song {
   }
 
   factory SongModel.fromJson(Map<String, dynamic> json) {
-    //  todo: can be added language an singer field here
     return SongModel(
       id: json['id'] ?? "",
       title: json['title'] ?? "",
@@ -53,5 +51,10 @@ class SongModel extends Song {
       url: json['url'] ?? "",
       imageUrl: json['image_url'] ?? "",
     );
+  }
+
+  @override
+  String toString() {
+    return 'Song{title: $title, album: $album';
   }
 }

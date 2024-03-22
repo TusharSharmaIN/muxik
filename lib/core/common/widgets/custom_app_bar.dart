@@ -28,10 +28,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () async {
-            //TODO: START from here
+          onPressed: () {
             context.read<AuthBloc>().add(AuthLogOut());
-            // context.go(AppRoutes.login);
+            context.go(AppRoutes.login);
           },
           icon: const Icon(
             Icons.logout_rounded,

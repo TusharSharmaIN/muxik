@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:muxik/core/route/app_router.dart';
 
+import '../../../../core/route/app_router.dart';
 import '../../../../core/theme/theme/app_colors.dart';
 import '../../domain/entities/song.dart';
 
 class SongCardWidget extends StatelessWidget {
+  final bool isFavorite;
+  final Function onFavorite;
+
   const SongCardWidget({
     super.key,
     required this.song,
+    this.isFavorite = false,
+    required this.onFavorite,
   });
 
   final Song song;
@@ -17,7 +22,14 @@ class SongCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push(AppRoutes.songDetails, extra: song);
+        context.push(
+          AppRoutes.songDetails,
+          extra: {
+            'songs': song,
+            'isFavorite': isFavorite,
+            'onFavorite': onFavorite,
+          },
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(right: 2 * 8),
@@ -36,6 +48,27 @@ class SongCardWidget extends StatelessWidget {
                 ),
               ),
             ),
+            isFavorite
+                ? Positioned(
+                    top: 0,
+                    right: 0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Container(
+                        color: AppColors.blackColor.withOpacity(0.5),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            isFavorite
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_outline_rounded,
+                            color: AppColors.rustyRed,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
             Container(
               height: 8 * 8,
               width: MediaQuery.of(context).size.width * 0.37,

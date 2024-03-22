@@ -8,6 +8,7 @@ class AppColors {
   static const Color cyclamen = Color(0xFFFB6DA9);
   static const Color lightSalmon = Color(0xFFFF9F7C);
   static const Color onyx = Color(0xFF343343);
+  static const Color rustyRed = Color(0xFFDA2C43);
 
   static const Color backgroundColor = chineseBlack;
   static const Color gradient1 = mediumOrchid;

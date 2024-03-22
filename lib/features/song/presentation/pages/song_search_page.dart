@@ -116,7 +116,12 @@ class SearchedListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push(AppRoutes.songDetails, extra: song);
+        context.push(
+          AppRoutes.songDetails,
+          extra: {
+            'songs': song,
+          },
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(8),

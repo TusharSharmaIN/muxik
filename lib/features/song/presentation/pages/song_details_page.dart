@@ -10,8 +10,15 @@ import '../widgets/seekbar_data.dart';
 
 class SongDetailsPage extends StatefulWidget {
   final SongModel song;
+  final bool isFavorite;
+  final Function onFavorite;
 
-  const SongDetailsPage({super.key, required this.song});
+  const SongDetailsPage({
+    super.key,
+    required this.song,
+    this.isFavorite = false,
+    required this.onFavorite,
+  });
 
   @override
   State<SongDetailsPage> createState() => _SongDetailsPageState();
@@ -79,6 +86,8 @@ class _SongDetailsPageState extends State<SongDetailsPage> {
               song: widget.song,
               seekBarDataStream: _seekBarDataStream,
               audioPlayer: audioPlayer,
+              isFavorite: widget.isFavorite,
+              onFavorite: widget.onFavorite,
             ),
           ],
         ),

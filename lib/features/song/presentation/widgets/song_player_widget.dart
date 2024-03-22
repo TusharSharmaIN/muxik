@@ -8,16 +8,20 @@ import 'player_button.dart';
 import 'seekbar_data.dart';
 
 class SongPlayerWidget extends StatelessWidget {
+  final SongModel song;
+  final Stream<SeekBarData> _seekBarDataStream;
+  final AudioPlayer audioPlayer;
+  final bool isFavorite;
+  final Function onFavorite;
+
   const SongPlayerWidget({
     super.key,
     required this.song,
     required Stream<SeekBarData> seekBarDataStream,
     required this.audioPlayer,
+    this.isFavorite = false,
+    required this.onFavorite,
   }) : _seekBarDataStream = seekBarDataStream;
-
-  final SongModel song;
-  final Stream<SeekBarData> _seekBarDataStream;
-  final AudioPlayer audioPlayer;
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +34,41 @@ class SongPlayerWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            song.title,
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            song.album,
-            maxLines: 2,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: Colors.white),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    song.title,
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    song.album,
+                    maxLines: 2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  isFavorite
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_outline_rounded,
+                  color: AppColors.rustyRed,
+                  size: 28,
+                ),
+              )
+            ],
           ),
           const SizedBox(height: 30),
           StreamBuilder<SeekBarData>(
@@ -62,6 +86,7 @@ class SongPlayerWidget extends StatelessWidget {
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w600,
                   ),
+                  timeLabelPadding: 8,
                   progress: positionData?.position ?? Duration.zero,
                   buffered: positionData?.bufferedPosition ?? Duration.zero,
                   total: positionData?.duration ?? Duration.zero,

@@ -32,174 +32,91 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is AuthFailure) {
-              showSnackBar(context, state.message);
-            } else if (state is AuthSuccess) {
-              //  TODO: uncomment this
-              context.go(
-                AppRoutes.songHome,
-                extra: state.user.name,
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is AuthLoading) {
-              return const Loader();
-            }
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 148, left: 24, right: 24),
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthFailure) {
+                showSnackBar(context, state.message);
+              } else if (state is AuthSuccess) {
+                context.go(
+                  AppRoutes.songHome,
+                  extra: state.user.name,
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is AuthLoading) {
+                return const Loader();
+              }
 
-            return Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Sign In.',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  AuthField(
-                    hintText: 'Email',
-                    controller: emailController,
-                  ),
-                  const SizedBox(height: 15),
-                  AuthField(
-                    hintText: 'Password',
-                    controller: passwordController,
-                    isObscureText: true,
-                  ),
-                  const SizedBox(height: 20),
-                  AuthGradientButton(
-                    buttonText: 'Sign in',
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(
-                              AuthLogin(
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim(),
-                              ),
-                            );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => context.push(AppRoutes.signup),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Don\'t have an account? ',
-                        style: Theme.of(context).textTheme.titleMedium,
-                        children: [
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  color: AppColors.gradient2,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ],
+              return Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Sign In.',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
+                    const SizedBox(height: 30),
+                    AuthField(
+                      hintText: 'Email',
+                      controller: emailController,
+                    ),
+                    const SizedBox(height: 15),
+                    AuthField(
+                      hintText: 'Password',
+                      controller: passwordController,
+                      isObscureText: true,
+                    ),
+                    const SizedBox(height: 20),
+                    AuthGradientButton(
+                      buttonText: 'Sign in',
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          context.read<AuthBloc>().add(
+                                AuthLogin(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                ),
+                              );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.signup),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Don\'t have an account? ',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          children: [
+                            TextSpan(
+                              text: 'Sign Up',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: AppColors.gradient2,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
-
-    ///
-    // return Scaffold(
-    //   body: Padding(
-    //     padding: const EdgeInsets.all(15.0),
-    //     child: BlocConsumer<AuthBloc, AuthState>(
-    //       listener: (context, state) {
-    //         if (state is AuthFailure) {
-    //           showSnackBar(context, state.message);
-    //         } else if (state is AuthSuccess) {
-    //           context.go(AppRoutes.musicHome);
-    //         }
-    //       },
-    //       builder: (context, state) {
-    //         if (state is AuthLoading) {
-    //           return const Loader();
-    //         }
-    //
-    //         return Form(
-    //           key: formKey,
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               const Text(
-    //                 'Sign In.',
-    //                 style: TextStyle(
-    //                   fontSize: 50,
-    //                   fontWeight: FontWeight.bold,
-    //                 ),
-    //               ),
-    //               const SizedBox(height: 30),
-    //               AuthField(
-    //                 hintText: 'Email',
-    //                 controller: emailController,
-    //               ),
-    //               const SizedBox(height: 15),
-    //               AuthField(
-    //                 hintText: 'Password',
-    //                 controller: passwordController,
-    //                 isObscureText: true,
-    //               ),
-    //               const SizedBox(height: 20),
-    //               AuthGradientButton(
-    //                 buttonText: 'Sign in',
-    //                 onPressed: () {
-    //                   if (formKey.currentState!.validate()) {
-    //                     context.read<AuthBloc>().add(
-    //                           AuthLogin(
-    //                             email: emailController.text.trim(),
-    //                             password: passwordController.text.trim(),
-    //                           ),
-    //                         );
-    //                   }
-    //                 },
-    //               ),
-    //               const SizedBox(height: 20),
-    //               GestureDetector(
-    //                 onTap: () => context.push(AppRoutes.signup),
-    //                 child: RichText(
-    //                   text: TextSpan(
-    //                     text: 'Don\'t have an account? ',
-    //                     style: Theme.of(context).textTheme.titleMedium,
-    //                     children: [
-    //                       TextSpan(
-    //                         text: 'Sign Up',
-    //                         style: Theme.of(context)
-    //                             .textTheme
-    //                             .titleMedium
-    //                             ?.copyWith(
-    //                               color: AppColors.gradient2,
-    //                               fontWeight: FontWeight.bold,
-    //                             ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ),
-    // );
   }
 }
